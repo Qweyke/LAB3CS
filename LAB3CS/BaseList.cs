@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Security.Claims;
 using System.Text;
 
 namespace LAB3CS
@@ -61,6 +63,26 @@ namespace LAB3CS
             }
             else if (this.Count == 0) return true;
             else return false;
+        }
+
+        public void SaveToFile(string path)
+        {
+            using (StreamWriter writer = new StreamWriter(path, true))
+            {
+                writer.WriteLine(this.ToString());
+            }
+        }
+        public void LoadToFile(string path)
+        {
+            using (StreamReader reader = new StreamReader(path))
+            {
+                string line;
+                
+                while ((line = reader.ReadLine()) != null) 
+                {
+                    line = line.Trim();
+                }
+            }
         }
     }
 }

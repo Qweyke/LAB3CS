@@ -7,9 +7,14 @@ namespace LAB3CS
     {
         static void Main(string[] args)
         {
+            string path = "list.txt";
+            File.WriteAllText(path, string.Empty);
+
             BaseList<int> abstr = new ArrList<int>();
             BaseList<int> chain = new ChainList<int>();
 
+            
+            
             Random rnd = new Random();
 
             int iter = 2000;
@@ -25,19 +30,16 @@ namespace LAB3CS
                 switch (ops)
                 {
                     case 0:
-
                         abstr.Add(value);
                         chain.Add(value);
                         break;
 
                     case 1:
-
                         abstr.Delete(pos);
                         chain.Delete(pos);
                         break;
 
                     case 2:
-
                         abstr.Insert(value, pos);
                         chain.Insert(value, pos);
 
@@ -50,7 +52,6 @@ namespace LAB3CS
                         break;*/
 
                     case 4:
-
                         abstr[pos] = value;
                         chain[pos] = value;
                         break;
@@ -98,16 +99,12 @@ namespace LAB3CS
             if (abstr.IsEqual(chain)) Console.WriteLine("Успешно для 2 теста");
             else Console.WriteLine("Шляпа");
 
+            abstr.SaveToFile(path);
+            chain.SaveToFile(path);
+
             string currentDirectory = Directory.GetCurrentDirectory();
             Console.WriteLine("Текущий рабочий каталог: " + currentDirectory);
-
-            string path = "list.txt";
-            using (StreamWriter writer = new StreamWriter(path))
-            {
-                writer.WriteLine(abstr.ToString());
-                writer.WriteLine(chain.ToString());
-            }            
-    
+                    
             Console.WriteLine("\n\nНажмите любую клавишу");
             Console.ReadKey();
         }
