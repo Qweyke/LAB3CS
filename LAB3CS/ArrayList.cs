@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Text;
 
 namespace LAB3CS
 {
-    public class ArrList : BaseList
+    public class ArrList<T> : BaseList<T> where T : IComparable<T>
     {
-        int[] buf;
+        T[] buf;
         int size = 1;
 
         public ArrList()
         {
-            buf = new int[size];
+            buf = new T[size];
         }
 
         private void Expd()
@@ -18,14 +19,14 @@ namespace LAB3CS
             Array.Resize(ref buf, size);
         }
 
-        public override void Add(int val)
+        public override void Add(T val)
         {
             if (count >= size) { Expd(); }
             buf[count] = val;
             count++;
 
         }
-        public override void Insert(int val, int pos)
+        public override void Insert(T val, int pos)
         {
             if (pos == count && pos == 0) Add(val);
 
@@ -56,7 +57,7 @@ namespace LAB3CS
 
             else if (pos == count - 1 && count > 0)
             {
-                buf[pos] = 0;
+                buf[pos] = default;
                 count--;
             }
         }
@@ -65,16 +66,16 @@ namespace LAB3CS
         {
             for (int i = 0; i < count; i++)
             {
-                buf[i] = 0;
+                buf[i] = default;
             }
             count = 0;
         }
 
-        public override int this[int i]
+        public override T this[int i]
         {
             get
             {
-                if (i >= count || i < 0) return 0;
+                if (i >= count || i < 0) return default;
 
                 return buf[i];
             }
@@ -99,9 +100,29 @@ namespace LAB3CS
             }
             else Console.WriteLine("Нет элементов в array листе");
         }
-        protected override BaseList Dummy()
+        protected override BaseList<T> Dummy()
         {
-            return new ArrList();
+            return new ArrList<T>();
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            if (count >= 0)
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    if (i == count - 1) sb.Append($"[{buf[i]}].\n ");
+                    else sb.Append($"[{buf[i]}], ");
+                }
+                return sb.ToString();
+            }
+            else
+            {
+                sb.Append("Нет элементов в array листе");
+                return sb.ToString(); 
+            }           
         }
     }
 }

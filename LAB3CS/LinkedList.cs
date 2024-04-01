@@ -1,13 +1,14 @@
 ﻿
 using System;
+using System.Text;
 
 namespace LAB3CS
 {
-    public class ChainList : BaseList
+    public class ChainList<T> : BaseList<T> where T : IComparable<T>
     {
         public class Node
         {
-            public int Data
+            public T Data
             {
                 set; get;
             }
@@ -15,7 +16,7 @@ namespace LAB3CS
             {
                 set; get;
             }
-            public Node(int data)
+            public Node(T data)
             {
                 Data = data;
                 Next = null;
@@ -40,7 +41,7 @@ namespace LAB3CS
             if (i == posit) return P;
             else return null;
         }
-        public override void Add(int value)
+        public override void Add(T value)
         {
             if (head == null)
             {
@@ -55,7 +56,7 @@ namespace LAB3CS
             }
             count++;
         }
-        public override void Insert(int value, int posit)
+        public override void Insert(T value, int posit)
         {
             if (posit == count && posit == 0) Add(value);
 
@@ -109,11 +110,11 @@ namespace LAB3CS
             count = 0;
         }
 
-        public override int this[int i]
+        public override T this[int i]
         {
             get
             {
-                if (i >= count || i < 0) return 0;
+                if (i >= count || i < 0) return default;
 
                 Node shw = Find(i);
                 return shw.Data;
@@ -142,9 +143,9 @@ namespace LAB3CS
             }
             else Console.WriteLine("Нет элементов в chain листе");
         }
-        protected override BaseList Dummy()
+        protected override BaseList<T> Dummy()
         {
-            return new ChainList();
+            return new ChainList<T>();
         }
 
         public override void Sort()
@@ -158,7 +159,7 @@ namespace LAB3CS
                 Node curr = head;
                 for (int i = 0; i < count - 1; i++)
                 {
-                    if (curr.Data < curr.Next.Data)
+                    if (curr.Data.CompareTo(curr.Next.Data) < 0)
                     {
                         (curr.Next.Data, curr.Data) = (curr.Data, curr.Next.Data);
                         swap = true;
@@ -166,6 +167,26 @@ namespace LAB3CS
                     curr = curr.Next;
                 }
             } while (swap);
+        }
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            Node cur = head;
+            if (cur != null)
+            {
+                while (cur.Next != null)
+                {
+                    sb.Append($"[{cur.Data}]; ");
+                    cur = cur.Next;
+                }
+                sb.Append($"[{cur.Data}].\n ");
+                return sb.ToString();
+            }
+            else
+            {
+                sb.Append("Нет элементов в chain листе");
+                return sb.ToString();
+            } 
         }
     }
 }

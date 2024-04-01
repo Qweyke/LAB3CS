@@ -1,30 +1,31 @@
 ﻿using System;
+using System.Text;
 
 namespace LAB3CS
 {
-    public abstract class BaseList
+    public abstract class BaseList<T> where T : IComparable<T>
     {
         protected int count = 0;
-        protected abstract BaseList Dummy();
+        protected abstract BaseList<T> Dummy();
         public int Count { get { return count; } }
-        public abstract void Add(int val);
+        public abstract void Add(T val);
         public abstract void Delete(int pos);
-        public abstract void Insert(int val, int pos);
+        public abstract void Insert(T val, int pos);
         public abstract void Clear();
-        public abstract int this[int i] { set; get; }
+        public abstract T this[int i] { set; get; }
         public abstract void Show();
-        public void Assign(BaseList source)
+        public void Assign(BaseList<T> source)
         {
             Clear();
             for (int i = 0; i < source.Count; i++) Add(source[i]);
         }
-        public void AssignTo(BaseList dest)
+        public void AssignTo(BaseList<T> dest)
         {
             dest.Assign(this);
         }
-        public BaseList Clone()
+        public BaseList<T> Clone()
         {
-            BaseList clone = Dummy();
+            BaseList<T> clone = Dummy();
             clone.Assign(this);
             return clone;
         }
@@ -35,7 +36,7 @@ namespace LAB3CS
             int pstn = 0;
             while (pstn < this.Count - 1)
             {
-                if (this[pstn] >= this[pstn + 1])
+                if (this[pstn].CompareTo(this[pstn + 1]) >= 0)
                 {
                     pstn++;
                 }
@@ -48,19 +49,18 @@ namespace LAB3CS
                 }
             }
         }
-        public bool IsEqual(BaseList list)
+        public bool IsEqual(BaseList<T> list)
         {
             if (this.Count > 0)
             {
                 for (int i = 0; i <= this.Count; i++)
                 {
-                    if (this[i] != list[i]) return false;
+                    if (this[i].CompareTo(list[i]) != 0) return false;
                 }
                 return true;
             }
             else if (this.Count == 0) return true;
             else return false;
         }
-
     }
 }

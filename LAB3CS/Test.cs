@@ -1,5 +1,5 @@
-﻿
-using System;
+﻿using System;
+using System.IO;
 
 namespace LAB3CS
 {
@@ -7,9 +7,8 @@ namespace LAB3CS
     {
         static void Main(string[] args)
         {
-
-            BaseList abstr = new ArrList();
-            BaseList chain = new ChainList();
+            BaseList<int> abstr = new ArrList<int>();
+            BaseList<int> chain = new ChainList<int>();
 
             Random rnd = new Random();
 
@@ -19,6 +18,8 @@ namespace LAB3CS
             {
                 int ops = rnd.Next(5);
                 int value = rnd.Next(100);
+                //double value = rnd.NextDouble() * 2000;
+                //bool value = rnd.Next(2) == 0;
                 int pos = rnd.Next(2000);
 
                 switch (ops)
@@ -97,13 +98,16 @@ namespace LAB3CS
             if (abstr.IsEqual(chain)) Console.WriteLine("Успешно для 2 теста");
             else Console.WriteLine("Шляпа");
 
-            abstr.Show();
-            Console.WriteLine("\n\n");
-            chain.Show();
-            Console.WriteLine("\n\n");
+            string currentDirectory = Directory.GetCurrentDirectory();
+            Console.WriteLine("Текущий рабочий каталог: " + currentDirectory);
 
-            Console.WriteLine($"Arr count = {abstr.Count}, Chain count = {chain.Count}\n");
-
+            string path = "list.txt";
+            using (StreamWriter writer = new StreamWriter(path))
+            {
+                writer.WriteLine(abstr.ToString());
+                writer.WriteLine(chain.ToString());
+            }            
+    
             Console.WriteLine("\n\nНажмите любую клавишу");
             Console.ReadKey();
         }
