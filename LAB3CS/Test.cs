@@ -56,7 +56,7 @@ namespace LAB3CS
                         break;
                 }
             }// test 1
-            
+
             if (abstr == chain) Console.WriteLine("Успешно для 1 теста");
             else Console.WriteLine("Шляпа для 1 теста");
 
@@ -67,11 +67,16 @@ namespace LAB3CS
             else Console.WriteLine("Шляпа по исключениям");
 
             abstr.Show();
-            chain.Show();           
+            chain.Show();
             BaseList<int> merged1 = chain + abstr;
             BaseList<int> merged2 = abstr + chain;
             merged1.Show();
             merged2.Show();
+
+            foreach (int el in abstr)
+            {
+                Console.Write($"[{el}] ");
+            }
 
             /*for (int i = 0; i < iter; i++)
             {
@@ -114,16 +119,28 @@ namespace LAB3CS
             //abstr.Sort();
             //chain.Sort();           
 
-            //abstr.SaveToFile(path);
-            //chain.SaceToFile(path);
-            //abstr.LoadFromFile(path);
-            chain.LoadFromFile(path);
+            for (int i = 0; i < iter / 100; i++)
+            {
+                int ops = rnd.Next(2);
 
-            Console.WriteLine($"Кол-во  файловых искл для {chain.ExFileCount}");
+                switch (ops)
+                {
+                    case 0:
+                        abstr.LoadFromFile(path);
+                        chain.LoadFromFile(path);                       
+                        break;
+
+                    case 1:
+                        abstr.SaveToFile(path);
+                        chain.SaveToFile(path);
+                        break;
+                }               
+            }
+            Console.WriteLine($"\nКол-во файловых искл {chain.ExFileCount} для chain, {abstr.ExFileCount} для abstr");
 
             string currentDirectory = Directory.GetCurrentDirectory();
             Console.WriteLine("\nТекущий рабочий каталог: " + currentDirectory);
-                    
+
             Console.WriteLine("\n\nНажмите любую клавишу");
             Console.ReadKey();
         }

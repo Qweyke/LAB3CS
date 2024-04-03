@@ -172,14 +172,14 @@ namespace LAB3CS
 
         public IEnumerator<T> GetEnumerator()
         {
-            return new ListEnumerator(this);
+            return new ListEnum(this);
         }
-        protected class ListEnumerator : IEnumerator<T>
+        protected class ListEnum : IEnumerator<T>
         {
-            private BaseList<T> list;
+            private readonly BaseList<T> list;
             private int index;
 
-            public ListEnumerator(BaseList<T> list) 
+            public ListEnum(BaseList<T> list) 
             {           
                 this.list = list;
                 index = -1;
@@ -190,7 +190,7 @@ namespace LAB3CS
                 get { return list[index]; }
             }
 
-            object IEnumerator.Current => Current;
+            object IEnumerator.Current { get { return Current; } }
 
             public bool MoveNext() 
             {
