@@ -55,6 +55,7 @@ namespace LAB3CS
 
             }
             count++;
+            OnListMethod();
         }
         public override void Insert(T value, int posit)
         {
@@ -80,6 +81,7 @@ namespace LAB3CS
                     count++;
                 }
             }
+            OnListMethod();
         }
         public override void Delete(int posit)
         {
@@ -103,6 +105,7 @@ namespace LAB3CS
                 head = null;
                 count--;
             }
+            OnListMethod();
         }
         public override void Clear()
         {
@@ -121,11 +124,12 @@ namespace LAB3CS
                     Node shw = Find(i);
                     return shw.Data;
                 }
-                catch
+                catch (BadIndexException)
                 {
                     ex_count++;
                     return default;
                 }
+                finally { OnListMethod(); }
             }
 
             set
@@ -137,10 +141,11 @@ namespace LAB3CS
                 Node st = Find(i);
                 st.Data = value;
                 }
-                catch
+                catch (BadIndexException)
                 {
                     ex_count++;                    
                 }
+                finally { OnListMethod(); }
             }
         }
 
@@ -155,6 +160,7 @@ namespace LAB3CS
                     cur = cur.Next;
                 }
                 Console.Write($"{cur.Data}. ");
+                Console.Write("\n\n");
             }
             else Console.WriteLine("Нет элементов в chain листе");
         }

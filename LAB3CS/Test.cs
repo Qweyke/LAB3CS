@@ -14,6 +14,9 @@ namespace LAB3CS
 
             Random rnd = new Random();
 
+            chain.Activated += chain.Handler;
+            abstr.Activated += abstr.Handler;
+
             int iter = 2000;
             for (int i = 0; i < iter; i++)
             {
@@ -53,11 +56,22 @@ namespace LAB3CS
                         break;
                 }
             }// test 1
-            if (abstr.IsEqual(chain)) Console.WriteLine("Успешно для 1 теста");
+            
+            if (abstr == chain) Console.WriteLine("Успешно для 1 теста");
             else Console.WriteLine("Шляпа для 1 теста");
 
-            if (abstr.ExCount == chain.ExCount) Console.WriteLine($"Кол-во исключений {abstr.ExCount}, {chain.ExCount}");
-            else Console.WriteLine("Шляпа");
+            if (abstr.EventCount == chain.EventCount) Console.WriteLine($"Успешно. Событий в abstr {abstr.EventCount}, событий в chain {chain.EventCount}");
+            else Console.WriteLine("Шляпа по событиям");
+
+            if (abstr.ExCount == chain.ExCount) Console.WriteLine($"Успешно. Кол-во исключений {abstr.ExCount}, {chain.ExCount}");
+            else Console.WriteLine("Шляпа по исключениям");
+
+            abstr.Show();
+            chain.Show();           
+            BaseList<int> merged1 = chain + abstr;
+            BaseList<int> merged2 = abstr + chain;
+            merged1.Show();
+            merged2.Show();
 
             /*for (int i = 0; i < iter; i++)
             {
@@ -90,23 +104,25 @@ namespace LAB3CS
                         break;
                 }
             }// test 2*/
-            //if (abstr.IsEqual(chain)) Console.WriteLine("Успешно для 2 теста");
-            //else Console.WriteLine("Шляпа");
+            //if (abstr == chain) Console.WriteLine("Успешно для 2 теста");
+            //else Console.WriteLine("Шляпа для 2 теста");
 
             //if (abstr.ExCount == chain.ExCount) 
             //else Console.WriteLine("Шляпа");
 
 
             //abstr.Sort();
-            //chain.Sort();
+            //chain.Sort();           
 
             //abstr.SaveToFile(path);
             //chain.SaceToFile(path);
             //abstr.LoadFromFile(path);
             chain.LoadFromFile(path);
 
+            Console.WriteLine($"Кол-во  файловых искл для {chain.ExFileCount}");
+
             string currentDirectory = Directory.GetCurrentDirectory();
-            Console.WriteLine("Текущий рабочий каталог: " + currentDirectory);
+            Console.WriteLine("\nТекущий рабочий каталог: " + currentDirectory);
                     
             Console.WriteLine("\n\nНажмите любую клавишу");
             Console.ReadKey();

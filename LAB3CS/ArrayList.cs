@@ -23,6 +23,7 @@ namespace LAB3CS
             if (count >= size) { Expd(); }
             buf[count] = val;
             count++;
+            OnListMethod();
 
         }
         public override void Insert(T val, int pos)
@@ -42,6 +43,7 @@ namespace LAB3CS
                 }
                 buf[pos] = val;
             }
+            OnListMethod();
         }
         public override void Delete(int pos)
         {
@@ -59,6 +61,7 @@ namespace LAB3CS
                 buf[pos] = default;
                 count--;
             }
+            OnListMethod();
         }
 
         public override void Clear()
@@ -81,12 +84,13 @@ namespace LAB3CS
                     if (i < 0) throw new BadIndexException("Позиция имеет отрицательное значение");
                     return buf[i];
                 }
-                catch
+                catch(BadIndexException)
                 {
 
                     ex_count++;
                     return default;
                 }
+                finally { OnListMethod();  }
             }
 
             set
@@ -97,10 +101,11 @@ namespace LAB3CS
                     if (i < 0) throw new BadIndexException("Позиция имеет отрицательное значение");
                     buf[i] = value;
                 }
-                catch
+                catch(BadIndexException)
                 {
                     ex_count++;
                 }
+                finally { OnListMethod(); }
             }
         }
 
@@ -115,6 +120,7 @@ namespace LAB3CS
                 }
             }
             else Console.WriteLine("Нет элементов в array листе");
+            Console.WriteLine("\n\n");
         }
         protected override BaseList<T> Dummy()
         {

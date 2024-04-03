@@ -1,17 +1,35 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Claims;
 using System.Text;
 
 namespace LAB3CS
 {
-    public abstract class BaseList<T> where T : IComparable<T>
+    public abstract class BaseList<T>: IEnumerable<T> where T : IComparable<T>
     {
         protected int count = 0;
         protected int ex_count = 0;
-        protected abstract BaseList<T> Dummy();
+        protected int ex_file_count = 0;
+        protected int event_count = 0;
         public int Count { get { return count; } }
         public int ExCount { get { return ex_count; } }
+        public int ExFileCount { get { return ex_file_count; } }
+        public int EventCount { get { return event_count; } }
+        protected abstract BaseList<T> Dummy();
+
+        public delegate void MethodListener();
+        public event MethodListener Activated;
+        protected void OnListMethod()
+        {
+            Activated?.Invoke();
+        }
+        public void Handler()
+        {
+            event_count++;
+        }
+
         public abstract void Add(T val);
         public abstract void Delete(int pos);
         public abstract void Insert(T val, int pos);
@@ -73,6 +91,13 @@ namespace LAB3CS
 
             }
         }
+        public class BadFileException : FormatException
+        {
+            public BadFileException(string message) : base(message)
+            {
+
+            }
+        }
         public void SaveToFile(string path)
         {
             using (StreamWriter writer = new StreamWriter(path))
@@ -83,29 +108,104 @@ namespace LAB3CS
         public void LoadFromFile(string path)
         {
             this.Clear();
-            
-            using (StreamReader reader = new StreamReader(path))
-            {
-                try
-                {
-                    string list = reader.ReadToEnd();
 
-                    list = list.Replace("[", "").Replace("]", "").Replace(".", "").Replace("\n", "");
-                    string[] elems = list.Split(',');
-                    foreach (string el in elems)
-                    {
-                        string trimmed = el.Trim();
-                        T conv_el = (T)Convert.ChangeType(trimmed, typeof(T));
-                        this.Add(conv_el);
-                    }
-                }
-                catch (Exception e) 
+            try
+            {
+                using (StreamReader reader = new StreamReader(path))
                 {
-                    Console.WriteLine(e.Message);
-                    this.Clear();
+                    try
+                    {
+                        string list = reader.ReadToEnd();
+
+                        list = list.Replace("[", "").Replace("]", "").Replace(".", "").Replace("\n", "");
+                        string[] elems = list.Split(',');
+                        foreach (string el in elems)
+                        {
+                            string trimmed = el.Trim();
+                            T conv_el = (T)Convert.ChangeType(trimmed, typeof(T));
+                            this.Add(conv_el);
+                        }
+                    }                   
+                    catch (FormatException)
+                    {
+                        throw new BadFileException("Неверный формат данных в файле");
+                    }
+                    finally 
+                    {
+                        //Console.Write("Данные копированные в лист - ");
+                        //this.Show();
+                    }
+
                 }
-                finally {this.Show(); }               
+            }
+            catch (BadFileException)
+            {
+                ex_file_count++;
+                this.Clear();
             }
         }
+        public static BaseList<T> operator +(BaseList<T> left, BaseList<T> right) 
+        {
+            BaseList<T> merged = left.Clone();
+            for (int i = 0; i < right.Count; i++) 
+            {
+                merged.Add(right[i]);
+            }
+            return merged;
+        }
+        public static bool operator ==(BaseList<T> left, BaseList<T> right)
+        {
+            if (left.IsEqual(right)) return true;
+            else return false;
+        }
+        public static bool operator !=(BaseList<T> left, BaseList<T> right)
+        {
+            if (left.IsEqual(right)) return false;
+            else return true;
+        }
+
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            return new ListEnumerator(this);
+        }
+        protected class ListEnumerator : IEnumerator<T>
+        {
+            private BaseList<T> list;
+            private int index;
+
+            public ListEnumerator(BaseList<T> list) 
+            {           
+                this.list = list;
+                index = -1;
+            }
+
+            public T Current
+            {
+                get { return list[index]; }
+            }
+
+            object IEnumerator.Current => Current;
+
+            public bool MoveNext() 
+            {
+                if (index < list.Count - 1) 
+                {
+                    index++;
+                    return  true;
+                }
+                else return false;
+            }
+
+            public void Reset() { index = -1; } 
+
+            public void Dispose() { }
+        }
+        
     }
 }
