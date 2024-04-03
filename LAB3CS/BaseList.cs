@@ -8,8 +8,10 @@ namespace LAB3CS
     public abstract class BaseList<T> where T : IComparable<T>
     {
         protected int count = 0;
+        protected int ex_count = 0;
         protected abstract BaseList<T> Dummy();
         public int Count { get { return count; } }
+        public int ExCount { get { return ex_count; } }
         public abstract void Add(T val);
         public abstract void Delete(int pos);
         public abstract void Insert(T val, int pos);
@@ -64,24 +66,45 @@ namespace LAB3CS
             else if (this.Count == 0) return true;
             else return false;
         }
+        public class BadIndexException : Exception
+        {
+            public BadIndexException(string message) : base(message)
+            {
 
+            }
+        }
         public void SaveToFile(string path)
         {
-            using (StreamWriter writer = new StreamWriter(path, true))
+            using (StreamWriter writer = new StreamWriter(path))
             {
                 writer.WriteLine(this.ToString());
             }
         }
-        public void LoadToFile(string path)
+        public void LoadFromFile(string path)
         {
+            this.Clear();
+            
             using (StreamReader reader = new StreamReader(path))
             {
-                string line;
-                
-                while ((line = reader.ReadLine()) != null) 
+                try
                 {
-                    line = line.Trim();
+                    string list = reader.ReadToEnd();
+
+                    list = list.Replace("[", "").Replace("]", "").Replace(".", "").Replace("\n", "");
+                    string[] elems = list.Split(',');
+                    foreach (string el in elems)
+                    {
+                        string trimmed = el.Trim();
+                        T conv_el = (T)Convert.ChangeType(trimmed, typeof(T));
+                        this.Add(conv_el);
+                    }
                 }
+                catch (Exception e) 
+                {
+                    Console.WriteLine(e.Message);
+                    this.Clear();
+                }
+                finally {this.Show(); }               
             }
         }
     }

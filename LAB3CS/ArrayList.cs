@@ -7,7 +7,6 @@ namespace LAB3CS
     {
         T[] buf;
         int size = 1;
-
         public ArrList()
         {
             buf = new T[size];
@@ -71,20 +70,37 @@ namespace LAB3CS
             count = 0;
         }
 
+        
         public override T this[int i]
         {
             get
             {
-                if (i >= count || i < 0) return default;
+                try
+                {
+                    if (i >= count) throw new BadIndexException("Позиция выходит за рамки листа");
+                    if (i < 0) throw new BadIndexException("Позиция имеет отрицательное значение");
+                    return buf[i];
+                }
+                catch
+                {
 
-                return buf[i];
+                    ex_count++;
+                    return default;
+                }
             }
 
             set
             {
-                if (i >= count || i < 0) return;
-
-                buf[i] = value;
+                try
+                {
+                    if (i >= count) throw new BadIndexException("Позиция выходит за рамки листа");
+                    if (i < 0) throw new BadIndexException("Позиция имеет отрицательное значение");
+                    buf[i] = value;
+                }
+                catch
+                {
+                    ex_count++;
+                }
             }
         }
 

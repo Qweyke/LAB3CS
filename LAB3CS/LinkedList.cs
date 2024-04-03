@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace LAB3CS
@@ -24,7 +25,6 @@ namespace LAB3CS
         }
 
         Node head = null;
-
         public Node Find(int posit)
         {
             if (posit >= count || head == null) return null; //if no el rtrn nthng
@@ -112,20 +112,35 @@ namespace LAB3CS
 
         public override T this[int i]
         {
-            get
+            get           
             {
-                if (i >= count || i < 0) return default;
-
-                Node shw = Find(i);
-                return shw.Data;
+                try
+                {
+                    if (i >= count) throw new BadIndexException("Позиция выходит за рамки листа");
+                    if (i < 0) throw new BadIndexException("Позиция имеет отрицательное значение");
+                    Node shw = Find(i);
+                    return shw.Data;
+                }
+                catch
+                {
+                    ex_count++;
+                    return default;
+                }
             }
 
             set
             {
-                if (i >= count || i < 0) return;
-
+                try
+                {
+                if(i >= count) throw new BadIndexException("Позиция выходит за рамки листа");
+                if (i < 0) throw new BadIndexException("Позиция имеет отрицательное значение");
                 Node st = Find(i);
                 st.Data = value;
+                }
+                catch
+                {
+                    ex_count++;                    
+                }
             }
         }
 
@@ -176,7 +191,7 @@ namespace LAB3CS
             {
                 while (cur.Next != null)
                 {
-                    sb.Append($"[{cur.Data}]; ");
+                    sb.Append($"[{cur.Data}], ");
                     cur = cur.Next;
                 }
                 sb.Append($"[{cur.Data}].\n ");

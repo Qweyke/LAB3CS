@@ -8,17 +8,13 @@ namespace LAB3CS
         static void Main(string[] args)
         {
             string path = "list.txt";
-            File.WriteAllText(path, string.Empty);
 
             BaseList<int> abstr = new ArrList<int>();
             BaseList<int> chain = new ChainList<int>();
 
-            
-            
             Random rnd = new Random();
 
             int iter = 2000;
-
             for (int i = 0; i < iter; i++)
             {
                 int ops = rnd.Next(5);
@@ -56,15 +52,14 @@ namespace LAB3CS
                         chain[pos] = value;
                         break;
                 }
-            }
-
-            abstr.Sort();
-            chain.Sort();
-
+            }// test 1
             if (abstr.IsEqual(chain)) Console.WriteLine("Успешно для 1 теста");
             else Console.WriteLine("Шляпа для 1 теста");
 
-            for (int i = 0; i < iter; i++)
+            if (abstr.ExCount == chain.ExCount) Console.WriteLine($"Кол-во исключений {abstr.ExCount}, {chain.ExCount}");
+            else Console.WriteLine("Шляпа");
+
+            /*for (int i = 0; i < iter; i++)
             {
                 int ops2 = rnd.Next(6);
 
@@ -94,13 +89,21 @@ namespace LAB3CS
                         abstr.AssignTo(chain);
                         break;
                 }
-            }
+            }// test 2*/
+            //if (abstr.IsEqual(chain)) Console.WriteLine("Успешно для 2 теста");
+            //else Console.WriteLine("Шляпа");
 
-            if (abstr.IsEqual(chain)) Console.WriteLine("Успешно для 2 теста");
-            else Console.WriteLine("Шляпа");
+            //if (abstr.ExCount == chain.ExCount) 
+            //else Console.WriteLine("Шляпа");
 
-            abstr.SaveToFile(path);
-            chain.SaveToFile(path);
+
+            //abstr.Sort();
+            //chain.Sort();
+
+            //abstr.SaveToFile(path);
+            //chain.SaceToFile(path);
+            //abstr.LoadFromFile(path);
+            chain.LoadFromFile(path);
 
             string currentDirectory = Directory.GetCurrentDirectory();
             Console.WriteLine("Текущий рабочий каталог: " + currentDirectory);
